@@ -1,0 +1,128 @@
+---
+title: "Visualizing my video game dataset"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+date: "2022-09-29"
+---
+
+# loading packages
+
+```{r}
+library(knitr)
+library(readr)
+library(rmarkdown)
+library(skimr)
+library(tidyverse)
+```
+
+# importing csv through readr
+
+```{r}
+library(readr)
+dataset <- read_csv("C:\\Users\\brawn\\Documents\\repositories\\work\\GAME_DATA.csv")
+```
+
+# data preview, summary
+
+```{r}
+summary(dataset)
+```
+
+```{r}
+head(dataset)
+```
+
+```{r}
+skim_without_charts(dataset)
+```
+
+# adding column
+
+```{r}
+mutate(dataset, file_size_gb_2=file_size_gb*100)
+```
+
+# looking at specific column
+
+```{r}
+dataset %>%
+select(developer)
+```
+
+# looking at every column but one named in function
+
+```{r}
+dataset %>%
+  select(-developer)
+```
+
+# renaming column
+
+```{r}
+dataset %>%
+  rename(file_size_gigabytes=file_size_gb)
+```
+
+# sorting data
+
+```{r}
+dataset %>% 
+  arrange(file_size_gb)
+
+dataset %>% 
+  arrange(-file_size_gb)
+```
+
+# new data frame
+
+```{r}
+dataset_2 <- dataset %>% arrange(-file_size_gb)
+
+dataset_3 <- dataset %>% mutate(file_size_gb_2=file_size_gb)
+```
+
+# average file size of on each platform
+
+```{r}
+dataset %>% 
+  group_by(platform) %>%
+    summarize(mean_file_size = mean(file_size_gb))
+```
+
+# max file size of on each platform
+
+```{r}
+dataset %>% 
+  group_by(platform) %>%
+  summarize(mean_file_size = max(file_size_gb))
+```
+
+# filter
+
+```{r}
+dataset %>% 
+  filter(file_size_gb < 1) %>%
+    arrange(-file_size_gb)
+```
+
+# simple bar chart, with ggplot
+
+```{r}
+ggplot(data=dataset, aes(x=platform, y=file_size_gb)) +
+  geom_bar(stat="identity") + 
+    coord_flip()
+
+ggplot(data=dataset, aes(x=platform, y=file_size_gb)) +
+  geom_bar(stat="identity", color="blue", width=.5) + 
+   coord_flip()
+
+ggplot(data=dataset, aes(x=platform, y=file_size_gb)) +
+  geom_bar(stat="identity", fill="red", width=.5) + 
+    coord_flip()
+
+ggplot(data=dataset, aes(x=platform, y=file_size_gb,fill=platform))+
+  geom_bar(stat="identity", width = .9) +
+    scale_fill_brewer(palette="Dark2") + coord_flip() + theme(legend.position="top")
+```
