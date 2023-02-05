@@ -3,6 +3,7 @@ From COV
 Where continent is not null 
 order by 3,4
 
+-- using COV and COVV dataset found in repository
 
 -- Select Data that we are going to be starting with
 
